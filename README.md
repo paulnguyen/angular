@@ -255,11 +255,11 @@ This section walks you through creating a child component, ```ProductAlertsCompo
 ![getting-started-7c](images/getting-started-7c.png)
 
 *  The generator creates starter files for the three parts of the component:
-	* product-alerts.component.ts
-    * product-alerts.component.html
-    * product-alerts.component.css
+   * product-alerts.component.ts
+   * product-alerts.component.html
+   * product-alerts.component.css
 
-3. Open ```product-alerts.component.ts```. The ```@Component()``` decorator indicates that the following class is a component. ```@Component()``` also provides metadata about the component, including its selector, templates, and styles.
+2. Open ```product-alerts.component.ts```. The ```@Component()``` decorator indicates that the following class is a component. ```@Component()``` also provides metadata about the component, including its selector, templates, and styles.
 
 ![getting-started-8](images/getting-started-8.png)
 
@@ -268,8 +268,65 @@ This section walks you through creating a child component, ```ProductAlertsCompo
   * The template and style filenames reference the component's HTML and CSS.
   * The ```@Component()``` definition also exports the class, ProductAlertsComponent, which handles functionality for the component.
 
+3. To set up ```ProductAlertsComponent``` to receive product data, first import Input from ```@angular/core```.
+
+* src/app/product-alerts/product-alerts.component.ts
+
+```
+import { Component, OnInit } from '@angular/core';
+import { Input } from '@angular/core';
+import { Product } from '../products';
+```
+
+![getting-started-9](images/getting-started-9.png)
 
 
+4. In the ```ProductAlertsComponent``` class definition, define a property named ```product``` with an ```@Input()``` decorator. The @Input() decorator indicates that the property value passes in from the component's parent, ```ProductListComponent```.
+
+* src/app/product-alerts/product-alerts.component.ts
+
+```
+export class ProductAlertsComponent implements OnInit {
+  @Input() product!: Product;
+  constructor() { }
+
+  ngOnInit() {
+  }
+
+}
+```
+
+![getting-started-10](images/getting-started-10.png)
+
+5. Open ```product-alerts.component.html``` and replace the placeholder paragraph with a ```Notify Me``` button that appears if the product price is over $700.
+
+* src/app/product-alerts/product-alerts.component.html
+
+```
+<p *ngIf="product && product.price > 700">
+  <button>Notify Me</button>
+</p>
+```
+
+![getting-started-11](images/getting-started-11.png)
+
+6. To display ```ProductAlertsComponent`` as a child of ```ProductListComponent```, add the selector, ```<app-product-alerts>``` to ```product-list.component.html```. Pass the current product as input to the component using property binding.
+
+* src/app/product-list/product-list.component.html
+
+```
+<button (click)="share()">
+  Share
+</button>
+
+<app-product-alerts
+  [product]="product">
+</app-product-alerts>
+```
+
+![getting-started-12](images/getting-started-12.png)
+
+* The new product alert component takes a product as input from the product list. With that input, it shows or hides the Notify Me button, based on the price of the product. The Phone XL price is over $700, so the Notify Me button appears on that product.
 
 
 
@@ -291,15 +348,81 @@ import { Output, EventEmitter } from '@angular/core';
 import { Product } from '../products';
 ```
 
+![getting-started-13](images/getting-started-13.png)
+
+2. In the component class, define a property named notify with an ```@Output()``` decorator and an instance of ```EventEmitter()```. Configuring ```ProductAlertsComponent``` with an ```@Output()`` allows the ```ProductAlertsComponent``` to emit an event when the value of the notify property changes.
+
+* src/app/product-alerts/product-alerts.component.ts
+
+```
+export class ProductAlertsComponent {
+  @Input() product: Product|undefined;
+  @Output() notify = new EventEmitter();
+}
+```
+
+![getting-started-14](images/getting-started-14.png)
+
+3. In ```product-alerts.component.html```, update the Notify Me button with an event binding to call the ``notify.emit()``` method.
+
+* src/app/product-alerts/product-alerts.component.html
+
+```
+<p *ngIf="product && product.price > 700">
+  <button (click)="notify.emit()">Notify Me</button>
+</p>
+```
+
+![getting-started-15](images/getting-started-15.png)
+
+4. Define the behavior that happens when the user clicks the button. The parent, ```ProductListComponent``` (not the ProductAlertsComponent) acts when the child raises the event. In ```product-list.component.ts```, define an ```onNotify()``` method, similar to the ```share()``` method.
+
+* src/app/product-list/product-list.component.ts
+
+```
+export class ProductListComponent {
+  products = products;
+
+  share() {
+    window.alert('The product has been shared!');
+  }
+
+  onNotify() {
+    window.alert('You will be notified when the product goes on sale');
+  }
+}
+```
+
+![getting-started-16](images/getting-started-16.png)
 
 
+5. Update the ```ProductListComponent``` to receive data from the ```ProductAlertsComponent```.  In ```product-list.component.html```, bind ```<app-product-alerts>``` to the ```onNotify()``` method of the product list component. ```<app-product-alerts>``` is what displays the Notify Me button.
+
+* src/app/product-list/product-list.component.html
+
+```
+<button (click)="share()">
+  Share
+</button>
+
+<app-product-alerts
+  [product]="product" 
+  (notify)="onNotify()">
+</app-product-alerts>
+```
+
+![getting-started-17](images/getting-started-17.png)
 
 
+6. Click the Notify Me button to trigger an alert which reads, "You will be notified when the product goes on sale".
 
 
-### Tour of Heros Tutorial
+![getting-started-18](images/getting-started-18.png)
 
-* https://angular.io/tutorial
+
+For more information on communication between components, see Component Interaction.
+
+* https://angular.io/guide/component-interaction
 
 
 
