@@ -426,4 +426,42 @@ For more information on communication between components, see Component Interact
 
 
 
+### Adding navigation (StackBlitz Cloud IDE)
+
+This guide builds on the first step of the Getting Started tutorial, Get started with a basic Angular app.
+
+At this stage of development, the online store application has a basic product catalog.
+
+In the following sections, you'll add the following features to the application:
+
+* Type a URL in the address bar to navigate to a corresponding product page.
+* Click links on the page to navigate within your single-page application.
+* Click the browser's back and forward buttons to navigate the browser history intuitively.
+
+#### Associate a URL path with a component
+
+The application already uses the Angular ```Router``` to navigate to the ```ProductListComponent```. This section shows you how to define a route to show individual product details.
+
+1. Generate a new component for product details. In the file list, right-click the app folder, choose ```Angular Generator``` and Component. Name the component ```product-details```.
+
+![navigation-1](images/navigation-1.png)
+![navigation-2](images/navigation-2.png)
+
+2. In ```app.module.ts```, add a route for product details, with a path of ```products/:productId``` and ```ProductDetailsComponent``` for the component.
+
+* src/app/app.module.ts
+
+```
+@NgModule({
+  imports: [
+    BrowserModule,
+    ReactiveFormsModule,
+    RouterModule.forRoot([
+      { path: '', component: ProductListComponent },
+      { path: 'products/:productId', component: ProductDetailsComponent },
+    ])
+  ],
+```
+
+
 
