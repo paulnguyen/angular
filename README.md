@@ -19,16 +19,35 @@
 
 #### Install the Angular CLI
 
+* https://www.npmjs.com/package/@angular/cli
+
 You use the Angular CLI to create projects, generate application and library code, and perform a variety of ongoing development tasks such as testing, bundling, and deployment.
 
 To install the Angular CLI, open a terminal window and run the following command:
 
 ```      
-npm install -g @angular/cli
+npm install -g @angular/cli  (for latest)
+```
+or
+
+```
+npm install -g @angular/cli@11 (for specific version)
 ```
 
 ![angular-install](images/angular-install.png)
 ![angular-install-version](images/angular-install-version.png)
+
+For Angular Updates:
+
+* https://update.angular.io
+
+For clean uninstall:
+
+```
+npm uninstall -g @angular/cli
+npm cache clean
+npm install -g @angular/cli@11
+```
 
 #### Create a workspace and initial application
 
