@@ -6,7 +6,7 @@
 
 * https://nodejs.org
 
-#### Use LTS version 14.17.X of Node.js
+### Use LTS version 14.17.X of Node.js
 
 * https://nodejs.org/en/
 
@@ -17,7 +17,7 @@
 
 * https://angular.io/guide/setup-local
 
-#### Install the Angular CLI
+### Install the Angular CLI
 
 * https://www.npmjs.com/package/@angular/cli
 
@@ -49,7 +49,7 @@ npm cache clean
 npm install -g @angular/cli@11
 ```
 
-#### Create a workspace and initial application
+### Create a workspace and initial application
 
 You develop apps in the context of an Angular workspace.
 
@@ -70,7 +70,7 @@ The Angular CLI installs the necessary Angular npm packages and other dependenci
 The CLI creates a new workspace and a simple Welcome app, ready to run.
 
 
-#### Run the application
+### Run the application
 
 The Angular CLI includes a server, so that you can build and serve your app locally.
 
@@ -93,7 +93,7 @@ If your installation and setup was successful, you should see a page similar to 
 ![ng-run-my-app](images/ng-run-my-app.png)
 
 
-#### Next steps
+### Next steps
 
 * Angular Concepts: https://angular.io/guide/architecture
 * Angular Glossary: https://angular.io/guide/glossary
@@ -114,7 +114,7 @@ If your installation and setup was successful, you should see a page similar to 
 
 * https://angular.io/start
 
-#### Create the sample project
+### Create the sample project
 
 To create the sample project, generate the ready-made sample project in StackBlitz. To save your work:
 
@@ -137,7 +137,7 @@ For more information on how to use StackBlitz, see the StackBlitz documentation.
 
 * https://developer.stackblitz.com/docs/platform/
 
-#### Create the product list
+### Create the product list
 
 In this section, you'll update the application to display a list of products. You'll use predefined product data from the products.ts file and methods from the product-list.component.ts file. This section guides you through editing the HTML, also known as the template.
 
@@ -260,7 +260,7 @@ In editing the template, you have explored some of the most popular features of 
 * https://angular.io/guide/architecture-components#template-syntax
 
 
-#### Pass data to a child component
+### Pass data to a child component
 
 Currently, the product list displays the name and description of each product. The ```ProductListComponent``` also defines a ```products property``` that contains imported data for each product from the products array in ```products.ts```.
 
@@ -351,7 +351,7 @@ export class ProductAlertsComponent implements OnInit {
 
 
 
-#### Pass data to a parent component
+### Pass data to a parent component
 
 To make the Notify Me button work, the child component needs to notify and pass the data to the parent component. The ```ProductAlertsComponent``` needs to emit an event when the user clicks Notify Me and the ```ProductListComponent``` needs to respond to the event.
 
@@ -460,7 +460,7 @@ In the following sections, you'll add the following features to the application:
 * Click links on the page to navigate within your single-page application.
 * Click the browser's back and forward buttons to navigate the browser history intuitively.
 
-#### Associate a URL path with a component
+### Associate a URL path with a component
 
 The application already uses the Angular ```Router``` to navigate to the ```ProductListComponent```. This section shows you how to define a route to show individual product details.
 
@@ -521,7 +521,7 @@ The application already uses the Angular ```Router``` to navigate to the ```Prod
 ![navigation-5b](images/navigation-5b.png)
 
 
-#### View product details
+### View product details
 
 The ProductDetailsComponent handles the display of each product. The Angular Router displays components based on the browser's URL and your defined routes.
 
@@ -628,7 +628,7 @@ For more information about the Angular Router, see ```Routing & Navigation```.
 ![navigation-11](images/navigation-11.png)
 
 
-#### What's next
+### What's next
 
 You have configured your application so you can view product details, each with a distinct URL.
 
@@ -655,7 +655,49 @@ This step of the tutorial guides you through creating a shopping cart in the fol
 * Add a shipping component, which retrieves shipping prices for the items in the cart by using Angular's ```HttpClient``` to retrieve shipping data from a ```.json``` file.
 
 
+### Create the shopping cart service
 
+In Angular, a service is an instance of a class that you can make available to any part of your application using Angular's dependency injection system.
+
+* https://angular.io/guide/glossary#dependency-injection-di
+
+Currently, users can view product information, and the application can simulate sharing and notifications about product changes.
+
+The next step is to build a way for users to add products to a cart. This section walks you through adding a Buy button and setting up a cart service to store information about products in the cart.
+
+### Define a cart service
+
+1. To generate a cart service, right click on the ```app``` folder, choose ```Angular Generator```, and choose ```Service```. Name the new service ```cart```.
+
+* src/app/cart.service.ts
+
+```
+import { Injectable } from '@angular/core';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class CartService {
+
+  constructor() {}
+
+}
+```
+
+2. Import the ```Product``` interface from ```./products.js```.
+
+3. In the ```CartService``` class, define an ```items``` property to store the array of the current products in the cart.
+
+* src/app/cart.service.ts
+
+```
+import { Product } from './products';
+/* . . . */
+export class CartService {
+  items: Product[] = [];
+/* . . . */
+}
+```
 
 
 
