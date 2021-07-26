@@ -744,6 +744,82 @@ export class CartService {
 
 
 
+### Use the cart service
+
+This section walks you through using the `CartService` to add a product to the cart.
+
+1. In `product-details.component.ts`, import the cart service.
+
+* src/app/product-details/product-details.component.ts
+
+```
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+
+import { Product, products } from '../products';
+import { CartService } from '../cart.service';
+```
+
+2. Inject the cart service by adding it to the `constructor()`.
+
+* src/app/product-details/product-details.component.ts
+
+```
+export class ProductDetailsComponent implements OnInit {
+  constructor(
+    private route: ActivatedRoute,
+    private cartService: CartService
+  ) { }
+}
+```
+
+3. Define the `addToCart()` method, which adds the current product to the cart.
+
+* src/app/product-details/product-details.component.ts
+
+```
+export class ProductDetailsComponent implements OnInit {
+  addToCart(product: Product) {
+    this.cartService.addToCart(product);
+    window.alert('Your product has been added to the cart!');
+  }
+}
+```
+
+![managing-data-6](images/managing-data-6.png)
+
+The `addToCart()` method does the following:
+
+* Takes the current product as an argument.
+* Uses the CartService addToCart() method to add the product to the cart.
+* Displays a message that you've added a product to the cart.
+
+
+4. In `product-details.component.html`, add a button with the label Buy, and bind the `click()` event to the` addToCart()` method. This code updates the product details template with a Buy button that adds the current product to the cart.
+
+* src/app/product-details/product-details.component.html
+
+```
+<h2>Product Details</h2>
+
+<div *ngIf="product">
+  <h3>{{ product.name }}</h3>
+  <h4>{{ product.price | currency }}</h4>
+  <p>{{ product.description }}</p>
+
+  <button (click)="addToCart(product)">Buy</button>
+</div>
+```
+
+5. Verify that the new Buy button appears as expected by refreshing the application and clicking on a product's name to display its details.
+
+![managing-data-7](images/managing-data-7.png)
+
+6. Click the Buy button to add the product to the stored list of items in the cart and display a confirmation message.
+
+![managing-data-8](images/managing-data-8.png)
+
+
 
 
 
