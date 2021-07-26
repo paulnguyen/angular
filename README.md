@@ -654,6 +654,8 @@ This step of the tutorial guides you through creating a shopping cart in the fol
 
 * Add a shipping component, which retrieves shipping prices for the items in the cart by using Angular's ```HttpClient``` to retrieve shipping data from a ```.json``` file.
 
+* https://angular.io/api/common/http/HttpClient
+
 
 ### Create the shopping cart service
 
@@ -699,7 +701,10 @@ export class CartService {
 }
 ```
 
-
+![managing-data-1](images/managing-data-1.png)
+![managing-data-2](images/managing-data-2.png)
+![managing-data-3](images/managing-data-3.png)
+![managing-data-4](images/managing-data-4.png)
 
 
 
