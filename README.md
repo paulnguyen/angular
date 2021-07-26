@@ -686,6 +686,10 @@ export class CartService {
 }
 ```
 
+![managing-data-1](images/managing-data-1.png)
+![managing-data-2](images/managing-data-2.png)
+![managing-data-3](images/managing-data-3.png)
+
 2. Import the ```Product``` interface from ```./products.js```.
 
 3. In the ```CartService``` class, define an ```items``` property to store the array of the current products in the cart.
@@ -701,10 +705,51 @@ export class CartService {
 }
 ```
 
-![managing-data-1](images/managing-data-1.png)
-![managing-data-2](images/managing-data-2.png)
-![managing-data-3](images/managing-data-3.png)
 ![managing-data-4](images/managing-data-4.png)
+
+
+4. Define methods to add items to the cart, return cart items, and clear the cart items.
+
+* src/app/cart.service.ts
+
+```
+export class CartService {
+  items: Product[] = [];
+/* . . . */
+
+  addToCart(product: Product) {
+    this.items.push(product);
+  }
+
+  getItems() {
+    return this.items;
+  }
+
+  clearCart() {
+    this.items = [];
+    return this.items;
+  }
+/* . . . */
+}
+```
+
+![managing-data-5](images/managing-data-5.png)
+
+
+* The ```addToCart()``` method appends a product to an array of ```items```.
+
+* The `getItems()` method collects the items users add to the cart and returns each item with its associated quantity.
+
+* The `clearCart()` method returns an empty array of items, which empties the cart.
+
+
+
+
+
+
+
+
+
 
 
 
