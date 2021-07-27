@@ -820,6 +820,160 @@ The `addToCart()` method does the following:
 ![managing-data-8](images/managing-data-8.png)
 
 
+### Create the cart view
+
+For customers to see their cart, you can create the cart view in two steps:
+
+1. Create a cart component and configure routing to the new component.
+2. Display the cart items.
+
+#### Set up the cart component
+
+To create the cart view, follow the same steps you did to create the `ProductDetailsComponent` and configure routing for the new component.
+
+1. Generate a cart component named `cart` by right-clicking the `app` folder, choosing Angular Generator, and Component.
+
+* src/app/cart/cart.component.ts
+
+```
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-cart',
+  templateUrl: './cart.component.html',
+  styleUrls: ['./cart.component.css']
+})
+export class CartComponent {
+
+  constructor() { }
+
+}
+```
+
+StackBlitz also generates an `ngOnInit()` by default in components. You can ignore the `CartComponent` `ngOnInit()` for this tutorial.
+
+![managing-data-9](images/managing-data-9.png)
+![managing-data-10](images/managing-data-10.png)
+![managing-data-11](images/managing-data-11.png)
+
+2. Open `app.module.ts` and add a route for the component `CartComponent`, with a `path` of `cart`.
+
+* src/app/app.module.ts
+
+```
+@NgModule({
+  imports: [
+    BrowserModule,
+    ReactiveFormsModule,
+    RouterModule.forRoot([
+      { path: '', component: ProductListComponent },
+      { path: 'products/:productId', component: ProductDetailsComponent },
+      { path: 'cart', component: CartComponent },
+    ])
+  ],
+```
+
+![managing-data-12](images/managing-data-12.png)
+
+3. Update the `Checkout` button so that it routes to the `/cart` URL. In `top-bar.component.html`, add a `routerLink` directive pointing to `/cart`.
+
+* https://angular.io/api/router/RouterLink
+
+* src/app/top-bar/top-bar.component.html
+
+```
+<a routerLink="/cart" class="button fancy-button">
+  <i class="material-icons">shopping_cart</i>Checkout
+</a>
+```
+
+![managing-data-13](images/managing-data-13.png)
+
+4. Verify the new `CartComponent` works as expected by clicking the Checkout button. You can see the "cart works!" default text, and the URL has the pattern `https://getting-started.stackblitz.io/cart`, where `getting-started.stackblitz.io` may be different for your StackBlitz project.
+
+![managing-data-14](images/managing-data-14.png)
+
+
+#### Display the cart items
+
+This section shows you how to use the cart service to display the products in the cart.
+
+1. In `cart.component.ts,` import the `CartService` from the `cart.service.ts` file.
+
+* src/app/cart/cart.component.ts
+
+```
+import { Component } from '@angular/core';
+import { CartService } from '../cart.service';
+```
+
+![managing-data-15](images/managing-data-15.png)
+
+2. Inject the `CartService` so that the `CartComponent` can use it by adding it to the `constructor()`.
+
+* src/app/cart/cart.component.ts
+
+```
+export class CartComponent {
+
+  constructor(
+    private cartService: CartService
+  ) { }
+}
+```
+
+![managing-data-16](images/managing-data-16.png)
+
+3. Define the `items` property to store the products in the cart.
+
+* src/app/cart/cart.component.ts
+
+```
+export class CartComponent {
+  items = this.cartService.getItems();
+
+  constructor(
+    private cartService: CartService
+  ) { }
+}
+```
+
+![managing-data-17](images/managing-data-17.png)
+
+This code sets the items using the `CartService getItems()` method. You defined this method when you created `cart.service.ts`.
+
+4. Update the cart template with a header, and use a `<div>` with an `*ngFor` to display each of the cart items with its name and price. The resulting `CartComponent` template is as follows.
+
+* src/app/cart/cart.component.html
+
+```
+<h3>Cart</h3>
+
+<div class="cart-item" *ngFor="let item of items">
+  <span>{{ item.name }}</span>
+  <span>{{ item.price | currency }}</span>
+</div>
+```
+
+![managing-data-18](images/managing-data-18.png)
+
+5. Verify that your cart works as expected:
+
+* Click My Store
+* Click on a product name to display its details.
+* Click Buy to add the product to the cart.
+* Click Checkout to see the cart.
+
+![managing-data-19](images/managing-data-19.png)
+
+
+For more information about services, see Introduction to Services and Dependency Injection.
+
+* https://angular.io/guide/architecture-services
+
+
+
+
 
 
 
