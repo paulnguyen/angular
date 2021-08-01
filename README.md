@@ -972,6 +972,333 @@ For more information about services, see Introduction to Services and Dependency
 * https://angular.io/guide/architecture-services
 
 
+### Retrieve shipping prices
+
+* https://angular.io/api/common/http/HttpClient
+
+Servers often return data in the form of a stream. Streams are useful because they make it easy to transform the returned data and make modifications to the way you request that data. Angular HttpClient is a built-in way to fetch data from external APIs and provide them to your application as a stream.
+
+This section shows you how to use HttpClient to retrieve shipping prices from an external file.
+
+The application that StackBlitz generates for this guide comes with predefined shipping data in assets/shipping.json. Use this data to add shipping prices for items in the cart.
+
+* src/assets/shipping.json
+
+```
+[
+  {
+    "type": "Overnight",
+    "price": 25.99
+  },
+  {
+    "type": "2-Day",
+    "price": 9.99
+  },
+  {
+    "type": "Postal",
+    "price": 2.99
+  }
+]
+```
+
+![managing-data-20](images/managing-data-20.png)
+
+#### Configure AppModule to use HttpClient
+
+* https://angular.io/api/common/http/HttpClient
+* https://angular.io/api/common/http/HttpClientModule
+
+To use Angular's HttpClient, you must configure your application to use HttpClientModule.
+
+Angular's HttpClientModule registers the providers your application needs to use the HttpClient service throughout your application.
+
+1. In `app.module.ts`, import `HttpClientModule` from the `@angular/common/http` package at the top of the file with the other imports. As there are a number of other imports, this code snippet omits them for brevity. Be sure to leave the existing imports in place.
+
+* src/app/app.module.ts
+
+```
+import { HttpClientModule } from '@angular/common/http';
+```
+
+![managing-data-21](images/managing-data-21.png)
+
+2. To register Angular's `HttpClient` providers globally, add `HttpClientModule` to the AppModule `@NgModule()` imports array.
+
+* src/app/app.module.ts
+
+```
+@NgModule({
+  imports: [
+    BrowserModule,
+    HttpClientModule,
+    ReactiveFormsModule,
+    RouterModule.forRoot([
+      { path: '', component: ProductListComponent },
+      { path: 'products/:productId', component: ProductDetailsComponent },
+      { path: 'cart', component: CartComponent },
+    ])
+  ],
+  declarations: [
+    AppComponent,
+    TopBarComponent,
+    ProductListComponent,
+    ProductAlertsComponent,
+    ProductDetailsComponent,
+    CartComponent,
+  ],
+  bootstrap: [
+    AppComponent
+  ]
+})
+export class AppModule { }
+```
+
+![managing-data-22](images/managing-data-22.png)
+
+#### Configure CartService to use HttpClient
+
+The next step is to inject the HttpClient service into your service so your application can fetch data and interact with external APIs and resources.
+
+1. In `cart.service.ts`, import `HttpClient` from the` @angular/common/http` package.
+
+* src/app/cart.service.ts
+
+```
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Product } from './products';
+```
+
+![managing-data-23](images/managing-data-23.png)
+
+2. Inject `HttpClient` into the `CartService constructor()`.
+
+* src/app/cart.service.ts
+
+```
+export class CartService {
+  items: Product[] = [];
+
+  constructor(
+    private http: HttpClient
+  ) {}
+/* . . . */
+}
+```
+
+![managing-data-24](images/managing-data-24.png)
+
+#### Configure CartService to get shipping prices
+
+To get shipping data, from `shipping.json`, You can use the `HttpClient` `get()` method.
+
+1. In `cart.service.ts`, below the `clearCart()` method, define a new `getShippingPrices()` method that uses the `HttpClient get()` method.
+
+* src/app/cart.service.ts
+
+```
+export class CartService {
+/* . . . */
+  getShippingPrices() {
+    return this.http.get<{type: string, price: number}[]>('/assets/shipping.json');
+  }
+}
+```
+
+![managing-data-25](images/managing-data-25.png)
+
+For more information about Angular's `HttpClient`, see the Client-Server Interaction guide.
+
+* https://angular.io/api/common/http/HttpClient
+* https://angular.io/guide/http
+
+
+### Create a shipping component
+
+Now that you've configured your application to retrieve shipping data, you can create a place to render that data.
+
+1. Generate a new component named `shipping` by right-clicking the app folder, choosing Angular Generator, and selecting Component.
+
+![managing-data-26](images/managing-data-26.png)
+![managing-data-27](images/managing-data-27.png)
+![managing-data-28](images/managing-data-28.png)
+
+* src/app/shipping/shipping.component.ts
+
+```
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-shipping',
+  templateUrl: './shipping.component.html',
+  styleUrls: ['./shipping.component.css']
+})
+export class ShippingComponent {
+
+  constructor() { }
+
+}
+```
+
+2. In `app.module.ts`, add a `route` for `shipping`. Specify a `path` of `shipping` and a component of `ShippingComponent`.
+
+* src/app/app.module.ts
+
+```
+@NgModule({
+  imports: [
+    BrowserModule,
+    HttpClientModule,
+    ReactiveFormsModule,
+    RouterModule.forRoot([
+      { path: '', component: ProductListComponent },
+      { path: 'products/:productId', component: ProductDetailsComponent },
+      { path: 'cart', component: CartComponent },
+      { path: 'shipping', component: ShippingComponent },
+    ])
+  ],
+  declarations: [
+    AppComponent,
+    TopBarComponent,
+    ProductListComponent,
+    ProductAlertsComponent,
+    ProductDetailsComponent,
+    CartComponent,
+    ShippingComponent
+  ],
+  bootstrap: [
+    AppComponent
+  ]
+})
+export class AppModule { }
+```
+
+![managing-data-29](images/managing-data-29.png)
+
+There's no link to the new shipping component yet, but you can see its template in the preview pane by entering the URL its route specifies. The URL has the pattern: `https://getting-started.stackblitz.io/shipping` where the getting-started.stackblitz.io part may be different for your StackBlitz project.
+
+![managing-data-30](images/managing-data-30.png)
+
+#### Configuring the ShippingComponent to use CartService
+
+This section guides you through modifying the `ShippingComponent` to retrieve shipping data via HTTP from the `shipping.json` file.
+
+
+1. In `shipping.component.ts`, import `CartService`.
+
+* src/app/shipping/shipping.component.ts
+
+```
+import { Component } from '@angular/core';
+import { CartService } from '../cart.service';
+```
+
+![managing-data-31](images/managing-data-31.png)
+
+2. Inject the cart service in the `ShippingComponent` `constructor()`.
+
+* src/app/shipping/shipping.component.ts
+
+```
+constructor(private cartService: CartService) {
+}
+```
+
+![managing-data-32](images/managing-data-32.png)
+
+3. Define a `shippingCosts property` that sets the `shippingCosts property` using the getShippingPrices() method from the CartService.
+
+* src/app/shipping/shipping.component.ts
+
+```
+export class ShippingComponent {
+  shippingCosts = this.cartService.getShippingPrices();
+}
+```
+
+![managing-data-33](images/managing-data-33.png)
+
+4. Update the `ShippingComponent` template to display the shipping types and prices using the `async` pipe.
+
+* https://angular.io/api/common/AsyncPipe
+
+* src/app/shipping/shipping.component.html
+
+```
+<h3>Shipping Prices</h3>
+
+<div class="shipping-item" *ngFor="let shipping of shippingCosts | async">
+  <span>{{ shipping.type }}</span>
+  <span>{{ shipping.price | currency }}</span>
+</div>
+```
+
+![managing-data-34](images/managing-data-34.png)
+
+The async pipe returns the latest value from a stream of data and continues to do so for the life of a given component. When Angular destroys that component, the async pipe automatically stops. For detailed information about the async pipe, see the AsyncPipe API documentation.
+
+* https://angular.io/api/common/AsyncPipe
+
+5. Add a link from the `CartComponent` view to the `ShippingComponent` view.
+
+* src/app/cart/cart.component.html
+
+```
+<h3>Cart</h3>
+
+<p>
+  <a routerLink="/shipping">Shipping Prices</a>
+</p>
+
+<div class="cart-item" *ngFor="let item of items">
+  <span>{{ item.name }}</span>
+  <span>{{ item.price | currency }}</span>
+</div>
+```
+
+![managing-data-35](images/managing-data-35.png)
+
+6. Click the `Checkout` button to see the updated cart. Remember that changing the application causes the preview to refresh, which empties the cart.
+
+![managing-data-36](images/managing-data-36.png)
+
+7. Click on the link to navigate to the shipping prices.
+
+
+![managing-data-37](images/managing-data-37.png)
+
+
+#### What's next
+
+You now have a store application with a product catalog, a shopping cart, and you can look up shipping prices.
+
+To continue exploring Angular:
+
+1 Continue to Forms for User Input to finish the application by adding the shopping cart view and a checkout form.
+
+* https://angular.io/start/start-forms
+
+2 Skip ahead to Deployment to move to local development, or deploy your application to Firebase or your own server.
+
+* https://angular.io/start/start-deployment
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
