@@ -144,7 +144,7 @@ In this section, you'll update the application to display a list of products. Yo
 1. In the product-list folder, open the template file product-list.component.html.
 
 2. Add an *ngFor structural directive on a ```<div>```, as follows.
-
+  
 * src/app/product-list/product-list.component.html
 
 ```   
